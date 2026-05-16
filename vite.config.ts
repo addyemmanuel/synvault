@@ -6,16 +6,17 @@ import tsconfigPaths from "vite-tsconfig-paths";
 
 export default defineConfig({
   plugins: [
-    // Maintains the @/ path aliases used by shadcn/components
-    tsconfigPaths(),
-    react(),
+    // 1. Core routing/start plugin MUST be first to split and map routes safely
     tanstackStart({
       server: { 
-        // Preserves your custom SSR error wrapper
         entry: "./src/server.ts" 
       },
     }),
-    // Automatically handles Netlify Edge/Functions routing for TanStack Start
+    // 2. Netlify plugin handles adapter conversion right after
     netlify(),
+    // 3. Asset path resolution
+    tsconfigPaths(),
+    // 4. React compilation handles JSX elements last
+    react(),
   ],
 });
